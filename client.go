@@ -34,6 +34,12 @@ func (c *Client) VerifyPlatformSignature(platformPublicKey string, data interfac
 	return km.VerifyPlatformSignature(platformPublicKey, data, platformSignature)
 }
 
+func (c *Client) VerifySignature(publicKey string, signature string, message string) (bool, error) {
+	km := utils.NewKeyManager()
+	km.LoadKeys(&c.Config)
+	return km.VerifySignature(publicKey, signature, message)
+}
+
 func (c *Client) GenerateKeys() (types.Keys, error) {
 	km := utils.NewKeyManager()
 	km.LoadKeys(&c.Config)
