@@ -9,6 +9,11 @@ go mod tidy
 1. Create a new client
 2. Use the client to make requests
 
+# Base URL
+
+https://pay-api-admin.blob20.io
+
+
 # Asset ID
 
 - USDT: 2
