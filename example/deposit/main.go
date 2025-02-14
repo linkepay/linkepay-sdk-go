@@ -15,12 +15,16 @@ func main() {
 		PrivateKey:           "",
 		PayPlatformPublicKey: "",
 	})
-	deposit, err := client.GetDepositAddress(&types.GetDepositAddressRequest{
+
+	resp, _ := client.CreateDepositAddress(&types.CreateDepositAddressRequest{
 		NetworkID: 1,
 		UserUID:   "user_uid",
 	})
-	fmt.Println(deposit)
-	if err != nil {
-		panic(err)
-	}
+	fmt.Println(resp)
+
+	resp2, _ := client.GetDepositAddress(&types.GetDepositAddressRequest{
+		NetworkID: 1,
+		UserUID:   "user_uid",
+	})
+	fmt.Println(resp2)
 }
