@@ -8,14 +8,14 @@ import (
 )
 
 func main() {
-	linkepay.SetClient(&types.Config{
+	client := linkepay.NewClient(&types.Config{
 		BaseURL:              "",
 		ProjectID:            "",
 		PublicKey:            "",
 		PrivateKey:           "",
 		PayPlatformPublicKey: "",
 	})
-	deposit, err := linkepay.GetDepositAddress(&types.GetDepositAddressRequest{
+	deposit, err := client.GetDepositAddress(&types.GetDepositAddressRequest{
 		NetworkID: 1,
 		UserUID:   "user_uid",
 	})

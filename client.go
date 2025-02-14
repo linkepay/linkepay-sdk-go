@@ -6,37 +6,38 @@ import (
 	"github.com/linkepay/linkepay-sdk-go/utils"
 )
 
-var Client = &types.Client{}
+type Client struct {
+	Config types.Config
+}
 
-func SetClient(config *types.Config) *types.Client {
-	Client = &types.Client{
+func NewClient(config *types.Config) *Client {
+	return &Client{
 		Config: *config,
 	}
-	return Client
 }
 
-func GetDepositAddress(req *types.GetDepositAddressRequest) (*types.GetDepositAddressResponse, error) {
-	return operations.GetDepositAddress(Client, req)
+func (c *Client) GetDepositAddress(req *types.GetDepositAddressRequest) (*types.GetDepositAddressResponse, error) {
+	return operations.GetDepositAddress(&types.Client{Config: c.Config}, req)
 }
 
-func RequestWithdrawal(data types.WithdrawalRequest) (map[string]interface{}, error) {
-	return operations.RequestWithdrawal(Client, data)
+func (c *Client) RequestWithdrawal(data types.WithdrawalRequest) (map[string]interface{}, error) {
+	return operations.RequestWithdrawal(&types.Client{Config: c.Config}, data)
 }
 
-func VerifyPlatformSignature(platformPublicKey string, data interface{}, platformSignature string) (bool, error) {
+func (c *Client) VerifyPlatformSignature(platformPublicKey string, data interface{}, platformSignature string) (bool, error) {
 	km := utils.NewKeyManager()
-	km.LoadKeys(&Client.Config)
+	km.LoadKeys(&c.Config)
 	return km.VerifyPlatformSignature(platformPublicKey, data, platformSignature)
 }
 
-func GenerateKeys() (types.Keys, error) {
+func (c *Client) GenerateKeys() (types.Keys, error) {
 	km := utils.NewKeyManager()
-	km.LoadKeys(&Client.Config)
+	km.LoadKeys(&c.Config)
 	return km.GenerateKeys()
 }
 
-func GetPlatformPublicKey() string {
+func (c *Client) GetPlatformPublicKey() string {
 	km := utils.NewKeyManager()
-	km.LoadKeys(&Client.Config)
+	km.LoadKeys(&c.Config)
 	return km.GetPlatformPublicKey()
 }
