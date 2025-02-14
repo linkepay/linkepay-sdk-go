@@ -15,7 +15,16 @@ func main() {
 		PrivateKey:           "",
 		PayPlatformPublicKey: "",
 	})
-	ok, err := client.VerifySignature("x", "x", "x")
+	callbackData := map[string]interface{}{
+		"deposit": map[string]interface{}{
+			// deposit data
+		},
+		"withdrawal": map[string]interface{}{
+			// withdrawal data
+		},
+	}
+	callbackDataSignature := "123"
+	ok, err := client.VerifyPlatformSignature(client.GetPlatformPublicKey(), callbackData, callbackDataSignature)
 	fmt.Println(ok)
 	if err != nil {
 		panic(err)

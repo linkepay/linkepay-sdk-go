@@ -8,7 +8,7 @@ import (
 	"github.com/linkepay/linkepay-sdk-go/utils"
 )
 
-func RequestWithdrawal(client *types.Client, data types.WithdrawalRequest) (map[string]interface{}, error) {
+func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest) (map[string]interface{}, error) {
 	projectUID := client.Config.ProjectID
 
 	clientWithdrawRequest := map[string]interface{}{

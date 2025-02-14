@@ -1,6 +1,6 @@
 package types
 
-type WithdrawalRequest struct {
+type RequestWithdrawalRequest struct {
 	AssetID     uint    `json:"asset_id"`
 	Amount      float64 `json:"amount"`
 	Destination string  `json:"destination"`
