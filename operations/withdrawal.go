@@ -12,7 +12,7 @@ func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest
 	projectUID := client.Config.ProjectID
 
 	clientWithdrawRequest := map[string]interface{}{
-		"uid":        utils.GenerateUID(), // withdrawal uid
+		"uid":        data.UID, // withdrawal uid
 		"asset_id":   data.AssetID,
 		"amount":     data.Amount,
 		"to_address": data.Destination,
