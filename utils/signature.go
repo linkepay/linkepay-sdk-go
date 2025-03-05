@@ -125,6 +125,41 @@ func (km *KeyManager) SignRequest(path string, body interface{}) (string, error)
 	return "0x" + signatureHex, nil
 }
 
+func (km *KeyManager) SignDataWithPrivateKey(data interface{}, privateKeyString string) (string, error) {
+	var message string
+	if data != nil {
+		sortedBodyStr, err := ToSortedJSON(data)
+		if err != nil {
+			return "", fmt.Errorf("failed to sort body: %w", err)
+		}
+		message = sortedBodyStr
+	} else {
+		return "", fmt.Errorf("data is nil")
+	}
+
+	// Hash the message
+	messageHash := sha256.Sum256([]byte(message))
+
+	// Parse private key
+
+	privateKey, err := crypto.HexToECDSA(strings.TrimPrefix(privateKeyString, "0x"))
+	if err != nil {
+		return "", fmt.Errorf("failed to parse private key: %w", err)
+	}
+
+	// Sign the hash
+	signature, err := crypto.Sign(messageHash[:], privateKey)
+	if err != nil {
+		return "", fmt.Errorf("failed to sign message: %w", err)
+	}
+
+	// Convert signature to hex
+	signatureHex := hex.EncodeToString(signature)
+
+	// Add 0x prefix
+	return "0x" + signatureHex, nil
+}
+
 // func (km *KeyManager) VerifySignature(publicKeyHex, message, signatureHex string) (bool, error) {
 // 	// Hash the message
 // 	messageHash := sha256.Sum256([]byte(message))

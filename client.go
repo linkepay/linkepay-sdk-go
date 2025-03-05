@@ -51,3 +51,8 @@ func (c *Client) GetPlatformPublicKey() string {
 	km.LoadKeys(&c.Config)
 	return km.GetPlatformPublicKey()
 }
+
+func (c *Client) SignDataWithPrivateKey(data interface{}, privateKey string) (string, error) {
+	km := utils.NewKeyManager()
+	return km.SignDataWithPrivateKey(data, privateKey)
+}
