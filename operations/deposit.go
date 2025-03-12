@@ -184,7 +184,8 @@ func CreateMultipleDepositAddress(client *types.Client, req *types.CreateMultipl
 	km := utils.NewKeyManager()
 	km.LoadKeys(&client.Config)
 
-	signedData, err := km.SignRequest(fmt.Sprintf("/api/v1/client/project/%s/user/generate-deposit-addresses", projectUID), reqData)
+	path := fmt.Sprintf("/api/v1/client/project/%s/user/generate-deposit-address", projectUID)
+	signedData, err := km.SignRequest(path, reqData)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to sign request: %v", err)
@@ -194,7 +195,7 @@ func CreateMultipleDepositAddress(client *types.Client, req *types.CreateMultipl
 	reqConfig := utils.RequestConfig{
 		Method:  "POST",
 		BaseURL: client.Config.BaseURL,
-		Path:    fmt.Sprintf("/api/v1/client/project/%s/user/generate-deposit-address", projectUID),
+		Path:    path,
 		Body:    reqData,
 		Headers: map[string]string{
 			"Content-Type": "application/json",
@@ -204,13 +205,13 @@ func CreateMultipleDepositAddress(client *types.Client, req *types.CreateMultipl
 
 	body, err := utils.Request(reqConfig)
 	if err != nil {
-		return nil, fmt.Errorf("request failed: %v", err)
+		return nil, err
 	}
 
 	// Parse response
 	var response types.CreateMultipleDepositAddressResponse
 	if err := json.Unmarshal(body, &response); err != nil {
-		return nil, fmt.Errorf("failed to parse response: %v", err)
+		return nil, err
 	}
 
 	return &response, nil
