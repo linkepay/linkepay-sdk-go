@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+
 	client := linkepay.NewClient(&types.Config{
 		BaseURL:              "",
 		ProjectID:            "",
@@ -16,15 +17,10 @@ func main() {
 		PayPlatformPublicKey: "",
 	})
 
-	resp, _ := client.CreateDepositAddress(&types.CreateDepositAddressRequest{
-		NetworkID: 1,
-		UserUID:   "user_uid",
+	resp, _ := client.CreateMultipleDepositAddress(&types.CreateMultipleDepositAddressRequest{
+		NetworkID: 11155111,
+		Count:     2,
 	})
 	fmt.Println(resp)
 
-	resp2, _ := client.GetDepositAddress(&types.GetDepositAddressRequest{
-		NetworkID: 1,
-		UserUID:   "user_uid",
-	})
-	fmt.Println(resp2)
 }
