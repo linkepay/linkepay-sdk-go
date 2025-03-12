@@ -24,6 +24,10 @@ func (c *Client) CreateDepositAddress(req *types.CreateDepositAddressRequest) (*
 	return operations.CreateDepositAddress(&types.Client{Config: c.Config}, req)
 }
 
+func (c *Client) CreateMultipleDepositAddress(req *types.CreateMultipleDepositAddressRequest) (*types.CreateMultipleDepositAddressResponse, error) {
+	return operations.CreateMultipleDepositAddress(&types.Client{Config: c.Config}, req)
+}
+
 func (c *Client) RequestWithdrawal(data types.RequestWithdrawalRequest) (map[string]interface{}, error) {
 	return operations.RequestWithdrawal(&types.Client{Config: c.Config}, data)
 }
