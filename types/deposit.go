@@ -43,7 +43,7 @@ type Address struct {
 	CreatedAt     string  `json:"created_at"`
 	UpdatedAt     string  `json:"updated_at"`
 	DeletedAt     *string `json:"deleted_at"`
-	UserUID       string  `json:"user_uid"`
+	Uid           string  `json:"uid"`
 	NetworkID     uint    `json:"network_id"`
 	NetworkName   string  `json:"network_name"`
 	Address       string  `json:"address"`

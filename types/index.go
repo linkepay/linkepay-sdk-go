@@ -10,6 +10,7 @@ type Config struct {
 	PublicKey            string
 	PrivateKey           string
 	PayPlatformPublicKey string
+	ApiKey               string
 }
 
 type WithdrawalResponse struct {
