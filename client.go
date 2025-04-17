@@ -1,6 +1,8 @@
 package linkepay
 
 import (
+	"errors"
+
 	"github.com/linkepay/linkepay-sdk-go/operations"
 	"github.com/linkepay/linkepay-sdk-go/types"
 	"github.com/linkepay/linkepay-sdk-go/utils"
@@ -36,6 +38,22 @@ func (c *Client) VerifyPlatformSignature(platformPublicKey string, data interfac
 	km := utils.NewKeyManager()
 	km.LoadKeys(&c.Config)
 	return km.VerifyPlatformSignature(platformPublicKey, data, platformSignature)
+}
+
+func (c *Client) ParseCallbackData(data types.CallbackResponse) (*types.CallbackResponseData, error) {
+	km := utils.NewKeyManager()
+	km.LoadKeys(&c.Config)
+
+	// verify signature
+	ok, err := c.VerifyPlatformSignature(km.GetPlatformPublicKey(), data.Data, data.Sig)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, errors.New("invalid signature")
+	}
+
+	return &data.Data, nil
 }
 
 func (c *Client) VerifySignature(publicKey string, signature string, message string) (bool, error) {
