@@ -40,7 +40,7 @@ func (c *Client) VerifyPlatformSignature(platformPublicKey string, data interfac
 	return km.VerifyPlatformSignature(platformPublicKey, data, platformSignature)
 }
 
-func (c *Client) ParseCallbackData(data types.CallbackResponse) (*types.CallbackResponseData, error) {
+func (c *Client) ParseCallbackData(data types.CallbackRequestDataWithSig) (*types.CallbackRespData, error) {
 	km := utils.NewKeyManager()
 	km.LoadKeys(&c.Config)
 
