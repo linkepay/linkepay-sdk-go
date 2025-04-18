@@ -22,6 +22,6 @@ type CallbackRespData struct {
 }
 
 type CallbackRequestDataWithSig struct {
-	Data CallbackRespData `json:"data"`
+	Data CallbackRespData `json:"verify_data"`
 	Sig  string           `json:"sig"`
 }
