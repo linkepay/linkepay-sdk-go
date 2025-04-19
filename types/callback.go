@@ -18,6 +18,7 @@ type CallbackRespData struct {
 	NetworkName string     `json:"network_name"`
 	Confirmed   bool       `json:"confirmed"`
 	ConfirmedAt *time.Time `json:"confirmed_at"`
+	Uid         string     `json:"uid"`
 	Type        string     `json:"type"` // "deposit" or "withdrawal"
 }
 
