@@ -23,23 +23,43 @@ func NewClient(config *types.Config) *Client {
 }
 
 func (c *Client) GetDepositAddress(req *types.GetDepositAddressRequest) (*types.GetDepositAddressResponse, error) {
-	return operations.GetDepositAddress(&types.Client{Config: c.Config}, req)
+	resp, err := operations.GetDepositAddress(&types.Client{Config: c.Config}, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (c *Client) CreateDepositAddress(req *types.CreateDepositAddressRequest) (*types.CreateDepositAddressResponse, error) {
-	return operations.CreateDepositAddress(&types.Client{Config: c.Config}, req)
+	resp, err := operations.CreateDepositAddress(&types.Client{Config: c.Config}, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (c *Client) CreateMultipleDepositAddress(req *types.CreateMultipleDepositAddressRequest) (*types.CreateMultipleDepositAddressResponse, error) {
-	return operations.CreateMultipleDepositAddress(&types.Client{Config: c.Config}, req)
+	resp, err := operations.CreateMultipleDepositAddress(&types.Client{Config: c.Config}, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
-func (c *Client) RequestWithdrawal(data types.RequestWithdrawalRequest) (map[string]interface{}, error) {
-	return operations.RequestWithdrawal(&types.Client{Config: c.Config}, data)
+func (c *Client) RequestWithdrawal(data types.RequestWithdrawalRequest) (*types.RequestWithdrawalResponse, error) {
+	resp, err := operations.RequestWithdrawal(&types.Client{Config: c.Config}, data)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 func (c *Client) VerifyPlatformSignature(platformPublicKey string, data interface{}, platformSignature string) (bool, error) {
-	return c.km.VerifyPlatformSignature(platformPublicKey, data, platformSignature)
+	resp, err := c.km.VerifyPlatformSignature(platformPublicKey, data, platformSignature)
+	if err != nil {
+		return false, err
+	}
+	return resp, nil
 }
 
 func (c *Client) ParseCallbackData(data types.CallbackRequestDataWithSig) (*types.CallbackRespData, error) {
@@ -56,11 +76,19 @@ func (c *Client) ParseCallbackData(data types.CallbackRequestDataWithSig) (*type
 }
 
 func (c *Client) VerifySignature(publicKey string, signature string, message string) (bool, error) {
-	return c.km.VerifySignature(publicKey, signature, message)
+	resp, err := c.km.VerifySignature(publicKey, signature, message)
+	if err != nil {
+		return false, err
+	}
+	return resp, nil
 }
 
 func (c *Client) GenerateKeys() (types.Keys, error) {
-	return c.km.GenerateKeys()
+	resp, err := c.km.GenerateKeys()
+	if err != nil {
+		return types.Keys{}, err
+	}
+	return resp, nil
 }
 
 func (c *Client) GetPlatformPublicKey() string {
@@ -68,5 +96,9 @@ func (c *Client) GetPlatformPublicKey() string {
 }
 
 func (c *Client) SignDataWithPrivateKey(data interface{}, privateKey string) (string, error) {
-	return c.km.SignDataWithPrivateKey(data, privateKey)
+	resp, err := c.km.SignDataWithPrivateKey(data, privateKey)
+	if err != nil {
+		return "", err
+	}
+	return resp, nil
 }

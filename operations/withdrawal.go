@@ -8,7 +8,7 @@ import (
 	"github.com/linkepay/linkepay-sdk-go/utils"
 )
 
-func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest) (map[string]interface{}, error) {
+func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest) (*types.RequestWithdrawalResponse, error) {
 	projectUID := client.Config.ProjectID
 
 	clientWithdrawRequest := map[string]interface{}{
@@ -45,10 +45,10 @@ func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest
 		return nil, fmt.Errorf("withdrawal request failed: %w", err)
 	}
 
-	var result map[string]interface{}
+	var result types.RequestWithdrawalResponse
 	if err := json.Unmarshal(body, &result); err != nil {
 		return nil, fmt.Errorf("failed to parse response: %w", err)
 	}
-	result["hasRequestedPayVendor"] = true
-	return result, nil
+
+	return &result, nil
 }
