@@ -15,7 +15,7 @@ func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest
 		"uid":        data.UID, // withdrawal uid
 		"asset_id":   data.AssetID,
 		"amount":     data.Amount,
-		"to_address": data.Destination,
+		"to_address": data.ToAddress,
 		"network_id": data.NetworkID,
 	}
 

@@ -16,12 +16,12 @@ func main() {
 		PayPlatformPublicKey: "",
 	})
 	withdrawal, err := client.RequestWithdrawal(types.RequestWithdrawalRequest{
-		Amount:      100.00,
-		Destination: "destination_address",
-		NetworkID:   1,
-		UserUID:     "user_uid",
-		UID:         "withdrawal_uid",
-		AssetID:     2,
+		Amount:    100.00,
+		ToAddress: "destination_address",
+		NetworkID: 1,
+		UserUID:   "user_uid",
+		UID:       "withdrawal_uid",
+		AssetID:   2,
 	})
 	fmt.Println(withdrawal)
 	if err != nil {
