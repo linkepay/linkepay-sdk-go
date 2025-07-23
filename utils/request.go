@@ -59,5 +59,12 @@ func Request(rc RequestConfig) ([]byte, error) {
 		return nil, fmt.Errorf("failed to read response: %v", err)
 	}
 
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("HTTP %d: %s", resp.StatusCode, string(body))
+	}
+
+	fmt.Printf("[LinkePay Debug] Response Status: %d\n", resp.StatusCode)
+	fmt.Printf("[LinkePay Debug] Response Body (first 200 chars): %s\n", string(body[:min(200, len(body))]))
+
 	return body, nil
 }

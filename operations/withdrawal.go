@@ -47,7 +47,7 @@ func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest
 
 	var result types.RequestWithdrawalResponse
 	if err := json.Unmarshal(body, &result); err != nil {
-		return nil, fmt.Errorf("failed to parse response: %w", err)
+		return nil, fmt.Errorf("failed to parse response, body: %s, error: %w", string(body), err)
 	}
 
 	return &result, nil
