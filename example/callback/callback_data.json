@@ -1,0 +1,22 @@
+{
+  "verify_data": {
+    "project_uid": "ROhTAi9AEd",
+    "from_address": "0x8d36a471cb5cfc32d3e08a8dce748c64be9e7308",
+    "to_address": "0xc5af7534b80a35f2e820d9e1e8dbce789600889f",
+    "address_uid": "nT6Evp",
+    "amount": "1000000000000000000",
+    "float_amount": "1",
+    "decimal": 18,
+    "tx_hash": "0x1bf1fff17f9071ea10f60a6a5f5a4f1e855a2056aa13e832101fa30cf6ca62d4",
+    "status": "confirmed",
+    "asset_id": 2,
+    "asset_name": "USDT",
+    "network_id": 56,
+    "network_name": "BSC Mainnet",
+    "confirmed": true,
+    "confirmed_at": "2025-11-21T03:07:09.15083Z",
+    "uid": "0x1bf1fff17f9071ea10f60a6a5f5a4f1e855a2056aa13e832101fa30cf6ca62d4",
+    "type": "deposit"
+  },
+  "sig": "bdd75214e4f1c2c31eeca324b7a0b76f04f906e8bf7f9a001d21492c033c89ba16b9ca10a752e936327497bd8d2c1498fd08e688fb03c46c47dd518b63e0744f00"
+}
