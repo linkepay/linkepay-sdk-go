@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity >=0.8.28;
+
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+
+contract BatchTransfer is Ownable {
+    using SafeERC20 for IERC20;
+
+    uint256 public constant MAX_BATCH = 50;
+
+    error InvalidInputLength();
+    error InvalidToAddress();
+    error InvalidAmount();
+
+    event BatchTransferEvent(
+        address indexed sender,
+        address indexed token,
+        uint256 batchSize,
+        uint256 totalAmount
+    );
+
+    constructor() Ownable(msg.sender) {}
+
+    function batchTransfer(address[] calldata to, uint256[] calldata amount, address token) public {
+        if (to.length != amount.length) revert InvalidInputLength();
+        if (to.length == 0) revert InvalidInputLength();
+        if (to.length > MAX_BATCH) revert InvalidInputLength();
+
+        uint256 totalAmount;
+        for (uint256 i = 0; i < to.length; i++) {
+            if (to[i] == address(0)) revert InvalidToAddress();
+            if (amount[i] == 0) revert InvalidAmount();
+
+            totalAmount += amount[i];
+            IERC20(token).safeTransferFrom(msg.sender, to[i], amount[i]);
+        }
+        emit BatchTransferEvent(msg.sender, token, to.length, totalAmount);
+    }
+
+    function withdraw(address token, address to) public onlyOwner {
+        if (to == address(0)) revert InvalidToAddress();
+        IERC20(token).safeTransfer(to, IERC20(token).balanceOf(address(this)));
+    }
+}
