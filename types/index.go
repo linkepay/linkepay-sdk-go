@@ -11,6 +11,7 @@ type Config struct {
 	PrivateKey           string
 	PayPlatformPublicKey string
 	ApiKey               string
+	Timeout              int // Request timeout in seconds (default: 30)
 }
 
 type WithdrawalResponse struct {

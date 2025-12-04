@@ -50,6 +50,7 @@ func GetDepositAddress(client *types.Client, req *types.GetDepositAddressRequest
 			"Content-Type": "application/json",
 			"X-Signature":  signedData,
 		},
+		Timeout: client.Config.Timeout,
 	}
 
 	body, err := utils.Request(reqConfig)
@@ -123,6 +124,7 @@ func CreateDepositAddress(client *types.Client, req *types.CreateDepositAddressR
 			"Content-Type": "application/json",
 			"X-Signature":  signedData,
 		},
+		Timeout: client.Config.Timeout,
 	}
 
 	body, err := utils.Request(reqConfig)
@@ -201,6 +203,7 @@ func CreateMultipleDepositAddress(client *types.Client, req *types.CreateMultipl
 			"Content-Type": "application/json",
 			"X-Signature":  signedData,
 		},
+		Timeout: client.Config.Timeout,
 	}
 
 	body, err := utils.Request(reqConfig)

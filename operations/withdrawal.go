@@ -38,6 +38,7 @@ func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest
 			"Content-Type": "application/json",
 			"X-Signature":  signedData,
 		},
+		Timeout: client.Config.Timeout,
 	}
 
 	body, err := utils.Request(reqConfig)

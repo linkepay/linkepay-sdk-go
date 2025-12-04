@@ -2,14 +2,18 @@ package utils
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 )
 
-// Endpoint represents an API endpoint to document
+const DefaultTimeout = 30 * time.Second
+
+// RequestConfig represents configuration for an HTTP request
 type RequestConfig struct {
 	BaseURL string
 	Method  string
@@ -17,10 +21,21 @@ type RequestConfig struct {
 	Params  url.Values
 	Body    interface{}
 	Headers map[string]string
+	Timeout int // Timeout in seconds (0 uses DefaultTimeout)
 }
 
 // Request makes an HTTP request and returns the response body
 func Request(rc RequestConfig) ([]byte, error) {
+	// Determine timeout
+	timeout := DefaultTimeout
+	if rc.Timeout > 0 {
+		timeout = time.Duration(rc.Timeout) * time.Second
+	}
+
+	// Create context with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
 	url := rc.BaseURL + rc.Path
 	if len(rc.Params) > 0 {
 		url += "?" + rc.Params.Encode()
@@ -35,7 +50,7 @@ func Request(rc RequestConfig) ([]byte, error) {
 		}
 	}
 
-	req, err := http.NewRequest(rc.Method, url, bytes.NewBuffer(reqBody))
+	req, err := http.NewRequestWithContext(ctx, rc.Method, url, bytes.NewBuffer(reqBody))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %v", err)
 	}
@@ -50,6 +65,9 @@ func Request(rc RequestConfig) ([]byte, error) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		if ctx.Err() == context.DeadlineExceeded {
+			return nil, fmt.Errorf("request timeout: request to %s exceeded %v", rc.Path, timeout)
+		}
 		return nil, fmt.Errorf("request failed: %v", err)
 	}
 	defer resp.Body.Close()
