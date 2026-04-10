@@ -3,6 +3,7 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/linkepay/linkepay-sdk-go/types"
 	"github.com/linkepay/linkepay-sdk-go/utils"
@@ -14,7 +15,7 @@ func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest
 	clientWithdrawRequest := map[string]interface{}{
 		"uid":        data.UID, // withdrawal uid
 		"asset_id":   data.AssetID,
-		"amount":     data.Amount,
+		"amount":     strconv.FormatFloat(data.Amount, 'f', -1, 64),
 		"to_address": data.ToAddress,
 		"network_id": data.NetworkID,
 	}
