@@ -3,6 +3,7 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	"github.com/linkepay/linkepay-sdk-go/types"
 	"github.com/linkepay/linkepay-sdk-go/utils"
@@ -79,6 +80,50 @@ func GetDepositAddress(client *types.Client, req *types.GetDepositAddressRequest
 		Address: address,
 		UID:     req.UserUID,
 	}, nil
+}
+
+func GetDeposits(client *types.Client, req *types.GetDepositsRequest) (*types.GetDepositsResponse, error) {
+	projectUID := client.Config.ProjectID
+	if projectUID == "" {
+		return nil, fmt.Errorf("projectUID is required")
+	}
+
+	if client.Config.ApiKey == "" {
+		return nil, fmt.Errorf("apiKey is required for GetDeposits")
+	}
+
+	params := url.Values{}
+	if req != nil {
+		if req.Page > 0 {
+			params.Set("page", fmt.Sprintf("%d", req.Page))
+		}
+		if req.PageSize > 0 {
+			params.Set("page_size", fmt.Sprintf("%d", req.PageSize))
+		}
+	}
+
+	reqConfig := utils.RequestConfig{
+		Method:  "GET",
+		BaseURL: client.Config.BaseURL,
+		Path:    fmt.Sprintf("/api/v1/client/project/%s/user/deposits", projectUID),
+		Params:  params,
+		Headers: map[string]string{
+			"X-API-Key": client.Config.ApiKey,
+		},
+		Timeout: client.Config.Timeout,
+	}
+
+	body, err := utils.Request(reqConfig)
+	if err != nil {
+		return nil, fmt.Errorf("request failed: %v", err)
+	}
+
+	var response types.GetDepositsResponse
+	if err := json.Unmarshal(body, &response); err != nil {
+		return nil, fmt.Errorf("failed to parse response: %v", err)
+	}
+
+	return &response, nil
 }
 
 func CreateDepositAddress(client *types.Client, req *types.CreateDepositAddressRequest) (*types.CreateDepositAddressResponse, error) {

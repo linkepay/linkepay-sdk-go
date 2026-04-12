@@ -30,6 +30,22 @@ func (c *Client) GetDepositAddress(req *types.GetDepositAddressRequest) (*types.
 	return resp, nil
 }
 
+func (c *Client) GetDeposits(req *types.GetDepositsRequest) (*types.GetDepositsResponse, error) {
+	resp, err := operations.GetDeposits(&types.Client{Config: c.Config}, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *Client) GetWithdrawals(req *types.GetWithdrawalsRequest) (*types.GetWithdrawalsResponse, error) {
+	resp, err := operations.GetWithdrawals(&types.Client{Config: c.Config}, req)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (c *Client) CreateDepositAddress(req *types.CreateDepositAddressRequest) (*types.CreateDepositAddressResponse, error) {
 	resp, err := operations.CreateDepositAddress(&types.Client{Config: c.Config}, req)
 	if err != nil {

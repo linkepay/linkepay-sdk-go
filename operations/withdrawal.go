@@ -3,11 +3,56 @@ package operations
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"strconv"
 
 	"github.com/linkepay/linkepay-sdk-go/types"
 	"github.com/linkepay/linkepay-sdk-go/utils"
 )
+
+func GetWithdrawals(client *types.Client, req *types.GetWithdrawalsRequest) (*types.GetWithdrawalsResponse, error) {
+	projectUID := client.Config.ProjectID
+	if projectUID == "" {
+		return nil, fmt.Errorf("projectUID is required")
+	}
+
+	if client.Config.ApiKey == "" {
+		return nil, fmt.Errorf("apiKey is required for GetWithdrawals")
+	}
+
+	params := url.Values{}
+	if req != nil {
+		if req.Page > 0 {
+			params.Set("page", fmt.Sprintf("%d", req.Page))
+		}
+		if req.PageSize > 0 {
+			params.Set("page_size", fmt.Sprintf("%d", req.PageSize))
+		}
+	}
+
+	reqConfig := utils.RequestConfig{
+		Method:  "GET",
+		BaseURL: client.Config.BaseURL,
+		Path:    fmt.Sprintf("/api/v1/client/project/%s/user/withdrawals", projectUID),
+		Params:  params,
+		Headers: map[string]string{
+			"X-API-Key": client.Config.ApiKey,
+		},
+		Timeout: client.Config.Timeout,
+	}
+
+	body, err := utils.Request(reqConfig)
+	if err != nil {
+		return nil, fmt.Errorf("request failed: %v", err)
+	}
+
+	var response types.GetWithdrawalsResponse
+	if err := json.Unmarshal(body, &response); err != nil {
+		return nil, fmt.Errorf("failed to parse response: %v", err)
+	}
+
+	return &response, nil
+}
 
 func RequestWithdrawal(client *types.Client, data types.RequestWithdrawalRequest) (*types.RequestWithdrawalResponse, error) {
 	projectUID := client.Config.ProjectID
