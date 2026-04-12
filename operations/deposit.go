@@ -26,20 +26,8 @@ func GetDepositAddress(client *types.Client, req *types.GetDepositAddressRequest
 		return nil, fmt.Errorf("networkID is required")
 	}
 
-	// Prepare request data
-	// reqData := map[string]interface{}{
-	// 	"user_uid":   userUID,
-	// 	"network_id": networkID,
-	// }
-
-	// Sign request
-	km := utils.NewKeyManager()
-	km.LoadKeys(&client.Config)
-
-	signedData, err := km.SignRequest(fmt.Sprintf("/api/v1/client/project/%s/user/%s/deposit-address/%d", projectUID, req.UserUID, req.NetworkID), nil)
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to sign request: %v", err)
+	if client.Config.ApiKey == "" {
+		return nil, fmt.Errorf("apiKey is required for GetDepositAddress")
 	}
 
 	// Make request
@@ -48,8 +36,7 @@ func GetDepositAddress(client *types.Client, req *types.GetDepositAddressRequest
 		BaseURL: client.Config.BaseURL,
 		Path:    fmt.Sprintf("/api/v1/client/project/%s/user/%s/deposit-address/%d", projectUID, req.UserUID, req.NetworkID),
 		Headers: map[string]string{
-			"Content-Type": "application/json",
-			"X-Signature":  signedData,
+			"X-API-Key": client.Config.ApiKey,
 		},
 		Timeout: client.Config.Timeout,
 	}
