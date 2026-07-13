@@ -4,11 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/linkepay/linkepay-sdk-go/types"
 	"github.com/linkepay/linkepay-sdk-go/utils"
 )
 
+// GetDepositAddress fetches the user's deposit address for the requested network.
+//
+// EVM networks share one address family: when an address is generated on any
+// EVM network (Ethereum, BSC, Sepolia, ...), the server registers the same
+// uid/address on ALL enabled EVM networks, so the address is deposit-valid on
+// every EVM chain. The response only reflects the requested network's record.
 func GetDepositAddress(client *types.Client, req *types.GetDepositAddressRequest) (*types.GetDepositAddressResponse, error) {
 
 	// Get project UID from config
@@ -113,6 +120,16 @@ func GetDeposits(client *types.Client, req *types.GetDepositsRequest) (*types.Ge
 	return &response, nil
 }
 
+// CreateDepositAddress generates a deposit address for the user on the
+// requested network.
+//
+// EVM networks share one address family: generating on any EVM network
+// (Ethereum, BSC, Sepolia, ...) registers the same uid/address on ALL enabled
+// EVM networks server-side, so the returned address is deposit-valid on every
+// EVM chain. The response only returns the requested network's record.
+//
+// If the uid was already used to generate an address, the returned error
+// matches types.ErrUidAlreadyUsed (check with errors.Is).
 func CreateDepositAddress(client *types.Client, req *types.CreateDepositAddressRequest) (*types.CreateDepositAddressResponse, error) {
 
 	// Get project UID from config
@@ -161,6 +178,11 @@ func CreateDepositAddress(client *types.Client, req *types.CreateDepositAddressR
 
 	body, err := utils.Request(reqConfig)
 	if err != nil {
+		// Surface the "uid already used" rejection (HTTP 400) as a typed
+		// error while keeping the original message context.
+		if strings.Contains(err.Error(), "uid already used") {
+			return nil, fmt.Errorf("request failed: %v: %w", err, types.ErrUidAlreadyUsed)
+		}
 		return nil, fmt.Errorf("request failed: %v", err)
 	}
 
@@ -187,6 +209,13 @@ func CreateDepositAddress(client *types.Client, req *types.CreateDepositAddressR
 	}, nil
 }
 
+// CreateMultipleDepositAddress generates a batch of deposit addresses on the
+// requested network.
+//
+// EVM networks share one address family: generating on any EVM network
+// (Ethereum, BSC, Sepolia, ...) registers each uid/address on ALL enabled EVM
+// networks server-side, so every returned address is deposit-valid on every
+// EVM chain. The response only returns the requested network's records.
 func CreateMultipleDepositAddress(client *types.Client, req *types.CreateMultipleDepositAddressRequest) (*types.CreateMultipleDepositAddressResponse, error) {
 
 	// Get project UID from config

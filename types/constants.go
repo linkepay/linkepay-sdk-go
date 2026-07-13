@@ -51,8 +51,8 @@ var SupportedNetworkIds = map[uint64]bool{
 
 const (
 	EthereumMainnetNetworkID = 1
-	BSCMainnetNetworkID      = 66
-	BSCTestnetNetworkID      = 67
+	BSCMainnetNetworkID      = 56
+	BSCTestnetNetworkID      = 97
 	SepoliaNetworkID         = 11155111
 	TRXNetworkID             = 4
 	TRXShastaNetworkID       = 5
